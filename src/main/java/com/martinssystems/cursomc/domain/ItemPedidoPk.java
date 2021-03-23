@@ -6,8 +6,10 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+
+
 /*
- * Anotacao para referencia que trata-se de uma classe 
+ * @Embeddable - Anotacao para referencia que trata-se de uma classe 
  * auxiliar
  * */
 @Embeddable
