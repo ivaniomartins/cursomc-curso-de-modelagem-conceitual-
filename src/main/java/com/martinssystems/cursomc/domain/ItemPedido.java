@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ItemPedido implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-    
+
 	@JsonIgnore
 	@EmbeddedId
 	private ItemPedidoPk id = new ItemPedidoPk();
@@ -33,12 +33,15 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 
+	public double getSubTotal() {
+		return (this.preco - this.desconto) * this.quantidade;
+	}
+
 	@JsonIgnore
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
-    
-	
+
 	public Produto getProduto() {
 		return id.getProduto();
 	}
