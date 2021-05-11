@@ -45,25 +45,31 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-		
+
 		<dependency>
 
-<groupId>javax.validation</groupId>
+			<groupId>javax.validation</groupId>
 
-<artifactId>validation-api</artifactId>
+			<artifactId>validation-api</artifactId>
 
-</dependency>
+		</dependency>
 
-<dependency>
+		<dependency>
 
-<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate</groupId>
 
-<artifactId>hibernate-validator</artifactId>
+			<artifactId>hibernate-validator</artifactId>
 
-<version>6.1.5.Final</version>
+			<version>6.1.5.Final</version>
 
-</dependency>
-		
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
 
