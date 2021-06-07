@@ -11,6 +11,7 @@ import com.martinssystems.cursomc.domain.ItemPedido;
 import com.martinssystems.cursomc.domain.PagamentoComBoleto;
 import com.martinssystems.cursomc.domain.Pedido;
 import com.martinssystems.cursomc.domain.enums.EstadoPagamento;
+import com.martinssystems.cursomc.repositories.ClienteRepository;
 import com.martinssystems.cursomc.repositories.ItemPedidoRepository;
 import com.martinssystems.cursomc.repositories.PagamentoRepository;
 import com.martinssystems.cursomc.repositories.PedidoRepository;
@@ -38,6 +39,9 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
+	@Autowired
+	private ClienteService clienteService;
+	
 	public Pedido find(Integer id) {
 
 		Optional<Pedido> obj = repo.findById(id);
@@ -50,6 +54,7 @@ public class PedidoService {
 
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if (obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -62,12 +67,17 @@ public class PedidoService {
 		
 		for (ItemPedido item : obj.getItens()) {
 			item.setDesconto(0.0);
-			item.setPreco(produtoService.find(item.getProduto().getId()).getPreco());
+			item.setProduto(produtoService.find(item.getProduto().getId()));
+			item.setPreco(item.getProduto().getPreco());
+			
 			item.setPedido(obj);
 		}
 		
 		itemPedidoRepository.saveAll(obj.getItens());
+
+		System.out.println(obj);
 		return obj;
+		
 	
 
 	}
