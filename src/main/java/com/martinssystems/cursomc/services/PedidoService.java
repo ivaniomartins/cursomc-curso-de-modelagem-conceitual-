@@ -11,7 +11,6 @@ import com.martinssystems.cursomc.domain.ItemPedido;
 import com.martinssystems.cursomc.domain.PagamentoComBoleto;
 import com.martinssystems.cursomc.domain.Pedido;
 import com.martinssystems.cursomc.domain.enums.EstadoPagamento;
-import com.martinssystems.cursomc.repositories.ClienteRepository;
 import com.martinssystems.cursomc.repositories.ItemPedidoRepository;
 import com.martinssystems.cursomc.repositories.PagamentoRepository;
 import com.martinssystems.cursomc.repositories.PedidoRepository;
@@ -22,26 +21,25 @@ public class PedidoService {
 
 	@Autowired
 	private PedidoRepository repo;
-	
-	
+
 	@Autowired
 	private BoletoService boletoService;
-	
-	
+
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
-	
-	
+
 	@Autowired
 	private ProdutoService produtoService;
-	
-	
+
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
+
+	@Autowired
+	private EmailService emailservice;
+
 	public Pedido find(Integer id) {
 
 		Optional<Pedido> obj = repo.findById(id);
@@ -61,24 +59,22 @@ public class PedidoService {
 			PagamentoComBoleto pgto = (PagamentoComBoleto) obj.getPagamento();
 			boletoService.preencherPagamentoComBoleto(pgto, obj.getInstante());
 		}
-		
+
 		obj = repo.save(obj);
 		pagamentoRepository.save(obj.getPagamento());
-		
+
 		for (ItemPedido item : obj.getItens()) {
 			item.setDesconto(0.0);
 			item.setProduto(produtoService.find(item.getProduto().getId()));
 			item.setPreco(item.getProduto().getPreco());
-			
+
 			item.setPedido(obj);
 		}
-		
+
 		itemPedidoRepository.saveAll(obj.getItens());
 
-		System.out.println(obj);
+		emailservice.sendOrderConfirmationEmail(obj);
 		return obj;
-		
-	
 
 	}
 
